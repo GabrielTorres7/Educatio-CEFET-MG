@@ -41,6 +41,11 @@ public class DisciplinaVisaoGeralControlador {
         boolean okClicked = mainApp.mostrarDisciplinaCaixaEditar(tempDisciplina);
         if (okClicked) {
             bd.adiciona(tempDisciplina);
+            Alert alert = new Alert(AlertType.ERROR);
+                      alert.setTitle("Disciplina criada!");
+                      alert.setHeaderText("Disciplina criada!");
+                      alert.setContentText("A nova disciplina foi adicionada ao banco de dados.!");
+                      alert.showAndWait();
         }
     }
     
@@ -64,10 +69,16 @@ public class DisciplinaVisaoGeralControlador {
                                 existeDisciplina = true;
 			}
 		}
+                
                 if(existeDisciplina){
-                    boolean okClicked1 = mainApp.mostrarDisciplinaCaixaEditar(tempDisciplina);
+                    boolean okClicked1 = mainApp.mostrarDisciplinaAlterar(tempDisciplina);
                         if(okClicked1){
                             bd.altera(tempDisciplina, tempDisciplina2.getNome());
+                            Alert alert = new Alert(AlertType.ERROR);
+                                alert.setTitle("Disciplina alterada!");
+                                alert.setHeaderText("Disciplina encontrada!");
+                                alert.setContentText("A disciplina foi alterada com sucesso!");
+                                alert.showAndWait();
                         }
                 }else{
                     Alert alert = new Alert(AlertType.ERROR);
@@ -99,6 +110,11 @@ public class DisciplinaVisaoGeralControlador {
                 
                 if(existeDisciplina){
 			bd.remove(tempDisciplina);
+                        Alert alert = new Alert(AlertType.ERROR);
+                                alert.setTitle("Disciplina removida!");
+                                alert.setHeaderText("Disciplina encontrada!");
+                                alert.setContentText("A disciplina foi removida com sucesso!");
+                                alert.showAndWait();
                 }else{
                     Alert alert = new Alert(AlertType.ERROR);
                       alert.setTitle("Nome Inválido");

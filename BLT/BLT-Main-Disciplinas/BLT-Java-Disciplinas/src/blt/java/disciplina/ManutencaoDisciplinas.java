@@ -3,6 +3,7 @@ package blt.java.disciplina;
 import java.io.IOException;
 
 import blt.java.disciplina.model.Disciplina;
+import blt.java.disciplina.view.DisciplinaAlterarControlador;
 import blt.java.disciplina.view.DisciplinaCaixaEditarControlador;
 import blt.java.disciplina.view.DisciplinaPesquisarControlador;
 import blt.java.disciplina.view.DisciplinaVisaoGeralControlador;
@@ -108,6 +109,37 @@ public class ManutencaoDisciplinas extends Application {
         }
     }
 
+    
+    public boolean mostrarDisciplinaAlterar(Disciplina disciplina) {
+        try {
+            // Carrega o arquivo fxml e cria um novo stage para a janela popup.
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(ManutencaoDisciplinas.class.getResource("view/DisciplinaAlterar.fxml"));
+            AnchorPane page = (AnchorPane) loader.load();
+
+            // Cria o palco dialogStage.
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Alterar Disciplina");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(primaryStage);
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+
+            // Define a classe no controle.
+            DisciplinaAlterarControlador controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+            controller.setDisciplina(disciplina);
+
+            // Mostra a janela e espera até o usuário fechar.
+            dialogStage.showAndWait();
+            
+            return controller.isOkClicked();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
     /**
      * Abre uma janela para editar detalhes para a disciplina especificada. Se o usuário clicar
      * OK, as mudanças são salvas no objeto disciplina fornecido e retorna true.
