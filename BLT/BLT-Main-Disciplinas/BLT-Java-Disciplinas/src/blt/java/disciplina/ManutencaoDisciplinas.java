@@ -4,10 +4,13 @@ import java.io.IOException;
 
 import blt.java.disciplina.model.Disciplina;
 import blt.java.disciplina.view.DisciplinaAlterarControlador;
-import blt.java.disciplina.view.DisciplinaCaixaEditarControlador;
+import blt.java.disciplina.view.DisciplinaAdicionarDisciplinaControlador;
+import blt.java.disciplina.view.DisciplinaExcluirControlador;
 import blt.java.disciplina.view.DisciplinaPesquisarControlador;
 import blt.java.disciplina.view.DisciplinaVisaoGeralControlador;
 import blt.java.disciplina.view.DisciplinaVisualizarControlador;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 
 import javafx.fxml.FXMLLoader;
@@ -19,98 +22,88 @@ import javafx.stage.Stage;
 
 public class ManutencaoDisciplinas extends Application {
 
-    private Stage primaryStage;
-    private BorderPane rootLayout;
+    private Stage stage;
+    private BorderPane borda;
     
     public ManutencaoDisciplinas() {
 
     }
 
     @Override
-    public void start(Stage primaryStage) {
-        this.primaryStage = primaryStage;
-        this.primaryStage.setTitle("BLT-Java-Disciplinas");
-
-        initRootLayout();
-        mostrarDisciplinaVisaoGeral();
+    public void start(Stage stage) {
+        this.stage = stage;
+        try {
+            initRootLayout();
+            mostrarDisciplinaVisaoGeral();
+        } catch (IOException ex) {
+            Logger.getLogger(ManutencaoDisciplinas.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
 
 	/**
      * Inicializa o root layout (layout base).
      */
-    public void initRootLayout() {
+    public void initRootLayout() throws IOException{
         try {
-            // Carrega o root layout do arquivo fxml.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(ManutencaoDisciplinas.class.getResource("view/RootLayout.fxml"));
-            rootLayout = (BorderPane) loader.load();
-
-            // Mostra a scene (cena) contendo o root layout.
-            Scene scene = new Scene(rootLayout);
-            primaryStage.setScene(scene);
-            primaryStage.show();
+            borda = (BorderPane) loader.load();
+            Scene scene = new Scene(borda);
+            stage.setScene(scene);
+            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-
-
-    /**
-     * Mostra o disciplina visão geral dentro do root layout.
-     */
-    public void mostrarDisciplinaVisaoGeral() {
+    public void mostrarDisciplinaVisaoGeral() throws IOException{
         try {
-            // Carrega a disciplina visão geral.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(ManutencaoDisciplinas.class.getResource("view/DisciplinaVisaoGeral.fxml"));
             AnchorPane disciplinaVisaoGeral = (AnchorPane) loader.load();
-
-            // Define a disciplina visão geral no centro do root layout.
-            rootLayout.setCenter(disciplinaVisaoGeral);
-
-            // Dá ao controlador acesso à aplicação principal.
+            borda.setCenter(disciplinaVisaoGeral);
             DisciplinaVisaoGeralControlador controller = loader.getController();
-            controller.setMainApp(this);
-            
+            controller.setMainApp(this);            
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
     
-    public boolean mostrarDisciplinaPesquisar(Disciplina disciplina) {
+    public void mostrarDisciplinaPesquisar() {
         try {
-            // Carrega o arquivo fxml e cria um novo stage para a janela popup.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(ManutencaoDisciplinas.class.getResource("view/DisciplinaPesquisar.fxml"));
             AnchorPane page = (AnchorPane) loader.load();
-
-            // Cria o palco dialogStage.
-            Stage dialogStage = new Stage();
-            dialogStage.setTitle("Pesquisar Disciplina");
-            dialogStage.initModality(Modality.WINDOW_MODAL);
-            dialogStage.initOwner(primaryStage);
-            Scene scene = new Scene(page);
-            dialogStage.setScene(scene);
-
-            // Define a classe no controle.
+            borda.setCenter(page);
             DisciplinaPesquisarControlador controller = loader.getController();
-            controller.setDialogStage(dialogStage);
-            controller.setDisciplina(disciplina);
-
-            // Mostra a janela e espera até o usuário fechar.
-            dialogStage.showAndWait();
-            
-            return controller.isOkClicked();
+            controller.setMain(this);           
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
+        }
+    }
+    
+    public void mostrarDisciplinaExcluir() {
+        try {
+            // Carrega o arquivo fxml e cria um novo stage para a janela popup.
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(ManutencaoDisciplinas.class.getResource("view/DisciplinaExcluir.fxml"));
+            AnchorPane page = (AnchorPane) loader.load();
+
+            // Cria o palco dialogStage.
+            borda.setCenter(page);
+
+            // Define a classe no controle.
+            DisciplinaExcluirControlador controller = loader.getController();
+            controller.setMain(this);
+                     
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
     
-    public boolean mostrarDisciplinaAlterar(Disciplina disciplina) {
+    public void mostrarDisciplinaAlterar(Disciplina disciplina) {
         try {
             // Carrega o arquivo fxml e cria um novo stage para a janela popup.
             FXMLLoader loader = new FXMLLoader();
@@ -118,25 +111,15 @@ public class ManutencaoDisciplinas extends Application {
             AnchorPane page = (AnchorPane) loader.load();
 
             // Cria o palco dialogStage.
-            Stage dialogStage = new Stage();
-            dialogStage.setTitle("Alterar Disciplina");
-            dialogStage.initModality(Modality.WINDOW_MODAL);
-            dialogStage.initOwner(primaryStage);
-            Scene scene = new Scene(page);
-            dialogStage.setScene(scene);
-
+            borda.setCenter(page);
             // Define a classe no controle.
-            DisciplinaAlterarControlador controller = loader.getController();
-            controller.setDialogStage(dialogStage);
+            DisciplinaAlterarControlador controller = (DisciplinaAlterarControlador) loader.getController();
             controller.setDisciplina(disciplina);
-
-            // Mostra a janela e espera até o usuário fechar.
-            dialogStage.showAndWait();
+            controller.setMain(this);
+           
             
-            return controller.isOkClicked();
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
         }
     }
     
@@ -144,31 +127,23 @@ public class ManutencaoDisciplinas extends Application {
      * Abre uma janela para editar detalhes para a disciplina especificada. Se o usuário clicar
      * OK, as mudanças são salvas no objeto disciplina fornecido e retorna true.
      */
-    public boolean mostrarDisciplinaCaixaEditar(Disciplina disciplina) {
+    public void mostrarAdicionarDisciplina() {
         try {
             // Carrega o arquivo fxml e cria um novo stage para a janela popup.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(ManutencaoDisciplinas.class.getResource("view/DisciplinaCaixaEditar.fxml"));
+            loader.setLocation(ManutencaoDisciplinas.class.getResource("view/DisciplinaAdicionarDisciplina.fxml"));
             AnchorPane page = (AnchorPane) loader.load();
 
             // Cria o palco dialogStage.
-            Stage dialogStage = new Stage();
-            dialogStage.setTitle("Editar Disciplina");
-            dialogStage.initModality(Modality.WINDOW_MODAL);
-            dialogStage.initOwner(primaryStage);
-            Scene scene = new Scene(page);
-            dialogStage.setScene(scene);
+            borda.setCenter(page);
 
-            DisciplinaCaixaEditarControlador controller = loader.getController();
-            controller.setDialogStage(dialogStage);
-            controller.setDisciplina(disciplina);
+            DisciplinaAdicionarDisciplinaControlador controller = loader.getController();
+            controller.setMain(this);
+
             
-            dialogStage.showAndWait();
-
-            return controller.isOkClicked();
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
+            
         }
     }
 
@@ -179,31 +154,18 @@ public class ManutencaoDisciplinas extends Application {
             loader.setLocation(ManutencaoDisciplinas.class.getResource("view/DisciplinaVisualizar.fxml"));
             AnchorPane page = (AnchorPane) loader.load();
 
-            Stage dialogStage = new Stage();
-            dialogStage.setTitle("Visualizar Disciplinas");
-            dialogStage.initModality(Modality.WINDOW_MODAL);
-            dialogStage.initOwner(primaryStage);
-            Scene scene = new Scene(page);
-            dialogStage.setScene(scene);
+            borda.setCenter(page);
 
             DisciplinaVisualizarControlador controller = loader.getController();
-            controller.setDialogStage(dialogStage);
+            controller.setMain(this);
             
-            dialogStage.showAndWait();
+            
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
-    /**
-     * Retorna o palco principal.
-     * @return
-     */
-    public Stage getPrimaryStage() {
-        return primaryStage;
-    }
-
+   
     public static void main(String[] args) {
         launch(args);
     }

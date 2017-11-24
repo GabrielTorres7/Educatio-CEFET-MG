@@ -5,8 +5,10 @@
  */
 package blt.java.disciplina.view;
 
+import blt.java.disciplina.ManutencaoDisciplinas;
 import blt.java.disciplina.jdbc.DisciplinaDao;
 import blt.java.disciplina.model.Disciplina;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
@@ -22,28 +24,28 @@ import javafx.stage.Stage;
  *
  * @author Gabriel
  */
-public class DisciplinaAlterarControlador implements Initializable {
+public class DisciplinaAlterarControlador {
     
     @FXML
     private TextField nome;
     @FXML
     private TextField cargaHorariaMin;
     
-    
-    private Stage dialogStage;
-    private Disciplina Disciplina;
-    private boolean okClicked = false;
+    private Disciplina disciplina;
+    private Disciplina disciplina2 = new Disciplina();
+    private static ManutencaoDisciplinas main;
     DisciplinaDao bd = new DisciplinaDao();
+    
     /**
      * Initializes the controller class.
      */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    
+    public void initialize() {
         // TODO
     }    
     
-     public void setDialogStage(Stage dialogStage) {
-        this.dialogStage = dialogStage;
+     public void setMain(ManutencaoDisciplinas main) {
+        DisciplinaAlterarControlador.main = main;
     }
 
     /**
@@ -52,10 +54,11 @@ public class DisciplinaAlterarControlador implements Initializable {
      * @param disciplina
      */
     public void setDisciplina(Disciplina disciplina) {
-        this.Disciplina = disciplina;
+        this.disciplina = disciplina;
         nome.setText(disciplina.getNome());
-        this.Disciplina.setIdTurma(disciplina.getIdTurma());
-        cargaHorariaMin.setText(Integer.toString(disciplina.getIdTurma()));
+        this.disciplina.setIdTurma(disciplina.getIdTurma());
+        this.disciplina.setCargaHorariaMin(disciplina.getCargaHorariaMin());
+        cargaHorariaMin.setText(Integer.toString(disciplina.getCargaHorariaMin()));
     }
 
     /**
@@ -63,24 +66,28 @@ public class DisciplinaAlterarControlador implements Initializable {
      *
      * @return
      */
-    public boolean isOkClicked() {
-        return okClicked;
-    }
+   
 
     /**
      * Chamado quando o usuário clica OK.
      */
     @FXML
-    private void botaoOk() throws SQLException {
+    private void botaoOk() throws SQLException, IOException {
         if (isInputValid()) {
             
             
            
-            Disciplina.setNome(nome.getText());
-            Disciplina.setCargaHorariaMin(Integer.parseInt(cargaHorariaMin.getText()));
-
-            okClicked = true;
-            dialogStage.close();
+            disciplina2.setNome(nome.getText());
+            disciplina2.setCargaHorariaMin(Integer.parseInt(cargaHorariaMin.getText()));
+            disciplina2.setIdTurma(disciplina.getIdTurma());
+            
+            bd.altera(disciplina2, disciplina.getNome());
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                                alert.setTitle("Disciplina alterada!");
+                                alert.setHeaderText("Disciplina encontrada!");
+                                alert.setContentText("A disciplina foi alterada com sucesso!");
+                                alert.showAndWait();
+            main.mostrarDisciplinaVisaoGeral();
         }
     }
 
@@ -88,8 +95,8 @@ public class DisciplinaAlterarControlador implements Initializable {
      * Chamado quando o usuário clica Cancelar.
      */
     @FXML
-    private void botaoCancelar() {
-        dialogStage.close();
+    private void botaoCancelar() throws IOException {
+        main.mostrarDisciplinaVisaoGeral();
     }
     
     private boolean isInputValid() {

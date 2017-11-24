@@ -48,13 +48,13 @@ public class DisciplinaDao {
 		}
 
 	  public void altera(Disciplina disciplina, String nome) {
-		     String sql = "update disciplinas set idTurma=?, cargaHorariaMin=?, nome=? where nome=?";
+		     String sql = "update disciplinas set cargaHorariaMin=?, nome=? where nome=? AND idTurma=?";
 		     try {
 		         PreparedStatement stmt = conexao.prepareStatement(sql);
-		         stmt.setInt(1, disciplina.getIdTurma());
-		         stmt.setInt(2, disciplina.getCargaHorariaMin());
-		         stmt.setString(3, disciplina.getNome());
-		         stmt.setString(4, nome);
+		         stmt.setInt(1, disciplina.getCargaHorariaMin());
+		         stmt.setString(2, disciplina.getNome());
+		         stmt.setString(3, nome);
+		         stmt.setInt(4, disciplina.getIdTurma());
 		         stmt.execute();
 		         stmt.close();
 		     } catch (SQLException e) {

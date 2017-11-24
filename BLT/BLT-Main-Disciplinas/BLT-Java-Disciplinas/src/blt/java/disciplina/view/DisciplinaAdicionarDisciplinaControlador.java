@@ -1,7 +1,9 @@
 package blt.java.disciplina.view;
 
+import blt.java.disciplina.ManutencaoDisciplinas;
 import blt.java.disciplina.jdbc.DisciplinaDao;
 import blt.java.disciplina.model.Disciplina;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,7 +22,7 @@ import javafx.scene.control.Label;
  *
  * @author Torres
  */
-public class DisciplinaCaixaEditarControlador {
+public class DisciplinaAdicionarDisciplinaControlador {
     
     @FXML
     private ChoiceBox campis;
@@ -50,9 +52,8 @@ public class DisciplinaCaixaEditarControlador {
     private String turma = new String();
     private String curso = new String();
     
-    private Stage dialogStage;
-    private Disciplina Disciplina;
-    private boolean okClicked = false;
+    private static ManutencaoDisciplinas main;
+    private Disciplina Disciplina = new Disciplina();
     DisciplinaDao bd = new DisciplinaDao();
     
     @FXML
@@ -70,39 +71,35 @@ public class DisciplinaCaixaEditarControlador {
         nome.setVisible(false);
         cargaHorariaMin.setVisible(false);
         
-        campis.getSelectionModel().selectedItemProperty().addListener(
-            (observable, oldValue, newValue) -> {
+        campis.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             try {
                 confirmaCampi(newValue.toString());
             } catch (SQLException ex) {
-                Logger.getLogger(DisciplinaCaixaEditarControlador.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(DisciplinaAdicionarDisciplinaControlador.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
         
-        departamentos.getSelectionModel().selectedItemProperty().addListener(
-            (observable, oldValue, newValue) -> {
+        departamentos.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             try {
                 confirmaDepartamento(newValue.toString());
             } catch (SQLException ex) {
-                Logger.getLogger(DisciplinaCaixaEditarControlador.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(DisciplinaAdicionarDisciplinaControlador.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
         
-        cursos.getSelectionModel().selectedItemProperty().addListener(
-            (observable, oldValue, newValue) -> {
+        cursos.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             try {
                 confirmaCurso(newValue.toString());
             } catch (SQLException ex) {
-                Logger.getLogger(DisciplinaCaixaEditarControlador.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(DisciplinaAdicionarDisciplinaControlador.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
         
-        idTurmaSelect.getSelectionModel().selectedItemProperty().addListener(
-            (observable, oldValue, newValue) -> {
+        idTurmaSelect.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             try {
                 mostrarCamposInserir(newValue.toString());
             } catch (SQLException ex) {
-                Logger.getLogger(DisciplinaCaixaEditarControlador.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(DisciplinaAdicionarDisciplinaControlador.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
     }
@@ -175,40 +172,27 @@ public class DisciplinaCaixaEditarControlador {
             
         }
     }
-    
-    /**
-     * Define o palco deste dialog.
-     *
-     * @param dialogStage
-     */
-    public void setDialogStage(Stage dialogStage) {
-        this.dialogStage = dialogStage;
-    }
 
     /**
      * Define a disciplina a ser editada no dialog.
      *
      * @param disciplina
      */
-    public void setDisciplina(Disciplina disciplina) {
-        this.Disciplina = disciplina;
-
+    
+    public void setMain(ManutencaoDisciplinas main) {
+        DisciplinaAdicionarDisciplinaControlador.main = main;
     }
-
     /**
      * Retorna true se o usuário clicar OK,caso contrário false.
      *
      * @return
      */
-    public boolean isOkClicked() {
-        return okClicked;
-    }
 
     /**
      * Chamado quando o usuário clica OK.
      */
     @FXML
-    private void botaoOk() throws SQLException {
+    private void botaoOk() throws SQLException, IOException {
         if (isInputValid()) {
             
             
@@ -217,8 +201,13 @@ public class DisciplinaCaixaEditarControlador {
             Disciplina.setNome(nomeCampoTexto.getText());
 
 
-            okClicked = true;
-            dialogStage.close();
+            bd.adiciona(Disciplina);
+            Alert alert = new Alert(AlertType.INFORMATION);
+                      alert.setTitle("Disciplina criada!");
+                      alert.setHeaderText("Disciplina criada!");
+                      alert.setContentText("A nova disciplina foi adicionada ao banco de dados.!");
+                      alert.showAndWait();
+            main.mostrarDisciplinaVisaoGeral();
         }
     }
 
@@ -226,8 +215,8 @@ public class DisciplinaCaixaEditarControlador {
      * Chamado quando o usuário clica Cancelar.
      */
     @FXML
-    private void botaoCancelar() {
-        dialogStage.close();
+    private void botaoCancelar() throws IOException {
+        main.mostrarDisciplinaVisaoGeral();
     }
 
     /**

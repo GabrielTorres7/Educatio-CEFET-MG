@@ -1,14 +1,18 @@
 package blt.java.emprestimo.view;
 
+import blt.java.emprestimo.ManutencaoEmprestimos;
 import blt.java.emprestimo.jdbc.EmprestimoDao;
 import blt.java.emprestimo.model.Emprestimo;
+import java.io.IOException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Stage;
 
 
 public class EmprestimoVisualizarControlador {
@@ -23,19 +27,17 @@ public class EmprestimoVisualizarControlador {
     @FXML
     private TableColumn<Emprestimo, String> dataPrevisaoDevolucaoColuna;
     @FXML
-    private TableColumn<Emprestimo, String> dataDevolucaoColuna;
-    @FXML
-    private TableColumn<Emprestimo, Integer> multaColuna;
+    private TextField filtro;
 
-    private Stage dialogStage;
+    private static ManutencaoEmprestimos main;
     EmprestimoDao bd = new EmprestimoDao();
     
     
     public EmprestimoVisualizarControlador() {
     }
 
-    public void setDialogStage(Stage dialogStage) {
-        this.dialogStage = dialogStage;
+    public void setMain(ManutencaoEmprestimos main) {
+        EmprestimoVisualizarControlador.main = main;
     }
 
     /**
@@ -49,17 +51,36 @@ public class EmprestimoVisualizarControlador {
         idAcervoColuna.setCellValueFactory(new PropertyValueFactory<>("idAcervo"));
         dataEmprestimoColuna.setCellValueFactory(new PropertyValueFactory<>("dataEmprestimo"));
         dataPrevisaoDevolucaoColuna.setCellValueFactory(new PropertyValueFactory<>("dataPrevisaoDevolucao"));
-        dataDevolucaoColuna.setCellValueFactory(new PropertyValueFactory<>("dataDevolucao"));
-        multaColuna.setCellValueFactory(new PropertyValueFactory<>("multa"));
         
         ObservableList<Emprestimo> emprestimos = FXCollections.observableArrayList(bd.getLista());
         emprestimoTabela.setItems(emprestimos);
- 
+        
+        FilteredList<Emprestimo> filtraDados = new FilteredList<>(emprestimos, p -> true);
+        filtro.textProperty().addListener((observable, oldValue, newValue) -> 
+        {
+            filtraDados.setPredicate(Emprestimo -> {
+            // Se o filtro estiver vazio mostra todos.
+            if (newValue == null || newValue.isEmpty()) {
+                return true;
+            }
+            // passa o filtro pra letra minuscula
+            String lowerCaseFilter = newValue.toLowerCase();
+            //Compara o filtro com os nomes que estão na lista
+            String id = Integer.toString(Emprestimo.getIdAcervo());
+            if (id.toLowerCase().contains(lowerCaseFilter)) {
+                return true; // Contem o filtro.
+            }
+                return false; //Não contem.
+            });
+        });
+        SortedList<Emprestimo> sorteiaDados = new SortedList<>(filtraDados);
+        sorteiaDados.comparatorProperty().bind(emprestimoTabela.comparatorProperty());
+        emprestimoTabela.setItems(sorteiaDados);
     }
 
     @FXML
-    private void botaoOk() {
-        dialogStage.close();
+    private void botaoOk() throws IOException {
+        main.mostrarEmprestimoVisaoGeral();
     }
 
 }

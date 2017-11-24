@@ -3,13 +3,23 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/F:/BLT-Java-Emprestimos/src/blt/java/emprestimo/model/Emprestimo.java</file>
-            <file>file:/F:/BLT-Java-Emprestimos/src/blt/java/emprestimo/ManutencaoEmprestimos.java</file>
             <file>file:/F:/BLT-Java-Emprestimos/src/blt/java/emprestimo/view/EmprestimoVisaoGeralControlador.java</file>
+            <file>file:/F:/BLT-Java-Emprestimos/src/blt/java/emprestimo/ManutencaoEmprestimos.java</file>
+            <file>file:/F:/BLT-Java-Emprestimos/src/blt/java/emprestimo/model/Acervo.java</file>
             <file>file:/F:/BLT-Java-Emprestimos/src/blt/java/emprestimo/model/Reserva.java</file>
-            <file>file:/F:/BLT-Java-Emprestimos/src/blt/java/emprestimo/jdbc/EmprestimoDao.java</file>
-            <file>file:/F:/BLT-Java-Emprestimos/src/blt/java/emprestimo/view/EmprestimoCaixaEditarControlador.java</file>
+            <file>file:/F:/BLT-Java-Emprestimos/src/blt/java/emprestimo/view/EmprestimoAdicionarEmprestimo.fxml</file>
+            <file>file:/F:/BLT-Java-Emprestimos/src/blt/java/emprestimo/view/EmprestimoSelecionarAcervo.fxml</file>
+            <file>file:/F:/BLT-Java-Emprestimos/src/application/Main.java</file>
             <file>file:/F:/BLT-Java-Emprestimos/src/blt/java/emprestimo/view/EmprestimoPesquisarControlador.java</file>
+            <file>file:/F:/BLT-Java-Emprestimos/src/blt/java/emprestimo/view/EmprestimoAdicionarEmprestimo.css</file>
+            <file>file:/F:/BLT-Java-Emprestimos/src/blt/java/emprestimo/view/EmprestimoAdicionarEmprestimoControlador.java</file>
+            <file>file:/F:/BLT-Java-Emprestimos/src/blt/java/emprestimo/view/EmprestimoPesquisar.css</file>
+            <file>file:/F:/BLT-Java-Emprestimos/src/blt/java/emprestimo/model/Emprestimo.java</file>
+            <file>file:/F:/BLT-Java-Emprestimos/src/blt/java/emprestimo/jdbc/EmprestimoDao.java</file>
+            <file>file:/F:/BLT-Java-Emprestimos/src/blt/java/emprestimo/view/EmprestimoVisualizarControlador.java</file>
+            <file>file:/F:/BLT-Java-Emprestimos/src/blt/java/emprestimo/jdbc/CriaConexao.java</file>
+            <file>file:/F:/BLT-Java-Emprestimos/src/blt/java/emprestimo/view/EmprestimoSelecionarAcervoControlador.java</file>
+            <file>file:/F:/BLT-Java-Emprestimos/src/blt/java/emprestimo/view/EmprestimoVisualizar.css</file>
             <file>file:/F:/BLT-Java-Emprestimos/src/blt/java/emprestimo/util/DataUtil.java</file>
         </group>
     </open-files>

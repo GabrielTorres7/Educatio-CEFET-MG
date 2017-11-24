@@ -2,17 +2,11 @@ package blt.java.disciplina.view;
 
 import javafx.fxml.FXML;
 
-
-
 import java.sql.SQLException;
-import java.util.List;
-
-
 import blt.java.disciplina.ManutencaoDisciplinas;
 import blt.java.disciplina.jdbc.DisciplinaDao;
-import blt.java.disciplina.model.Disciplina;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
+import java.io.IOException;
+
 
 /**
 *
@@ -36,17 +30,10 @@ public class DisciplinaVisaoGeralControlador {
      */
     @FXML
     private void botaoNovaDisciplina()  {
-        Disciplina tempDisciplina = new Disciplina();
 
-        boolean okClicked = mainApp.mostrarDisciplinaCaixaEditar(tempDisciplina);
-        if (okClicked) {
-            bd.adiciona(tempDisciplina);
-            Alert alert = new Alert(AlertType.ERROR);
-                      alert.setTitle("Disciplina criada!");
-                      alert.setHeaderText("Disciplina criada!");
-                      alert.setContentText("A nova disciplina foi adicionada ao banco de dados.!");
-                      alert.showAndWait();
-        }
+        mainApp.mostrarAdicionarDisciplina();
+        
+        
     }
     
     /**
@@ -54,80 +41,21 @@ public class DisciplinaVisaoGeralControlador {
      * uma pessoa a ser editada.
      */
     @FXML
-   private void botaoEditarDisciplina() {
-    	Disciplina tempDisciplina = new Disciplina();
-        Disciplina tempDisciplina2 = new Disciplina();
-        boolean existeDisciplina = false;
+   private void botaoEditarDisciplina() throws IOException{
+ 
+        mainApp.mostrarDisciplinaPesquisar();
         
-        boolean okClicked = mainApp.mostrarDisciplinaPesquisar(tempDisciplina2);
-        if(okClicked){
-    	List<Disciplina> disciplinas = bd.getLista();
-
-		for (Disciplina disciplina : disciplinas) {
-			if(tempDisciplina2.getNome().equals(disciplina.getNome()) ){
-				tempDisciplina = disciplina;
-                                existeDisciplina = true;
-			}
-		}
-                
-                if(existeDisciplina){
-                    boolean okClicked1 = mainApp.mostrarDisciplinaAlterar(tempDisciplina);
-                        if(okClicked1){
-                            bd.altera(tempDisciplina, tempDisciplina2.getNome());
-                            Alert alert = new Alert(AlertType.ERROR);
-                                alert.setTitle("Disciplina alterada!");
-                                alert.setHeaderText("Disciplina encontrada!");
-                                alert.setContentText("A disciplina foi alterada com sucesso!");
-                                alert.showAndWait();
-                        }
-                }else{
-                    Alert alert = new Alert(AlertType.ERROR);
-                      alert.setTitle("Nome Inválido");
-                      alert.setHeaderText("Disciplina não encontrada!");
-                      alert.setContentText("Por favor, visualize os nomes das disciplinas e tente novamente.");
-                      alert.showAndWait();
-                }
-        }
     }
 
     @FXML
-    private void botaoDeletarDisciplina() {
-    	Disciplina tempDisciplina = new Disciplina();
-        Disciplina tempDisciplina2 = new Disciplina();
-    	boolean existeDisciplina = false;
+    private void botaoDeletarDisciplina() throws IOException{
         
-        boolean okClicked = mainApp.mostrarDisciplinaPesquisar(tempDisciplina2);
-        if(okClicked){
-
-    	List<Disciplina> disciplinas = bd.getLista();
-
-		for (Disciplina disciplina : disciplinas) {
-			if(tempDisciplina2.getNome().equals( disciplina.getNome() )){
-				tempDisciplina = disciplina;
-                                existeDisciplina = true;
-			}
-		}
-                
-                if(existeDisciplina){
-			bd.remove(tempDisciplina);
-                        Alert alert = new Alert(AlertType.ERROR);
-                                alert.setTitle("Disciplina removida!");
-                                alert.setHeaderText("Disciplina encontrada!");
-                                alert.setContentText("A disciplina foi removida com sucesso!");
-                                alert.showAndWait();
-                }else{
-                    Alert alert = new Alert(AlertType.ERROR);
-                      alert.setTitle("Nome Inválido");
-                      alert.setHeaderText("Disciplina não encontrada!");
-                      alert.setContentText("Por favor, visualize os nomes das disciplinas e tente novamente.");
-                      alert.showAndWait();
-                }
-        }
+        mainApp.mostrarDisciplinaExcluir();
 
     }
 
     @FXML
-    private void botaoVisualizarDisciplina()  {
+    private void botaoVisualizarDisciplina() throws IOException{
 
         mainApp.mostrarDisciplinasVisualizar();
 

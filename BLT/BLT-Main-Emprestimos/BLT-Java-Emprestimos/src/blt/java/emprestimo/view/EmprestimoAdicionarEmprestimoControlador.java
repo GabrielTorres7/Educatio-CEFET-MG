@@ -1,29 +1,32 @@
-package blt.java.disciplina.view;
+package blt.java.emprestimo.view;
 
-import blt.java.disciplina.ManutencaoDisciplinas;
-import blt.java.disciplina.jdbc.DisciplinaDao;
-import blt.java.disciplina.model.Disciplina;
+import blt.java.emprestimo.ManutencaoEmprestimos;
+import blt.java.emprestimo.jdbc.EmprestimoDao;
+import blt.java.emprestimo.model.Emprestimo;
+import blt.java.emprestimo.model.Reserva;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 
 
+
 /**
- * Dialog para editar detalhes de uma disciplina.
+ * Dialog para editar detalhes de um empréstimo.
  *
  * @author Torres
  */
-public class DisciplinaPesquisarControlador {
+public class EmprestimoAdicionarEmprestimoControlador {
     
     @FXML
     private ChoiceBox campis;
@@ -32,88 +35,86 @@ public class DisciplinaPesquisarControlador {
     @FXML
     private ChoiceBox cursos;
     @FXML
-    private ChoiceBox idTurmaSelect;
+    private ChoiceBox turmas;
     @FXML
-    private ChoiceBox nomeCampoTexto;
+    private ChoiceBox alunos;
     @FXML
-    private Label nomeDepartamento;
+    private Label labelDepartamento;
     @FXML
-    private Label nomeCurso;
+    private Label labelCurso;
     @FXML
-    private Label idTurma;
+    private Label labelTurma;
     @FXML
-    private Label nome;
+    private Label labelAluno;
     
     private String campi = null;
     private String departamento = null;
     private String turma = null;
     private String curso = null;
-    private String idTurmaString = null;
-    private String nomeString = null;
+    private String aluno = null;
     
-    private static ManutencaoDisciplinas main;
-    private Disciplina disciplina = new Disciplina();
-    DisciplinaDao bd = new DisciplinaDao();
+    private static ManutencaoEmprestimos main;
+    private Emprestimo emprestimo = new Emprestimo();
+    EmprestimoDao bd = new EmprestimoDao();
     
+    /**
+     * Inicializa a classe controlador. Este método é chamado automaticamente
+     * após o arquivo fxml ter sido carregado.
+     */
     @FXML
     private void initialize() throws SQLException {
         campis.setItems(bd.pegaCampis());
         
         departamentos.setVisible(false);
         cursos.setVisible(false);
-        idTurmaSelect.setVisible(false);
-        nomeCampoTexto.setVisible(false);
-        nomeDepartamento.setVisible(false);
-        nomeCurso.setVisible(false);
-        idTurma.setVisible(false);
-        nome.setVisible(false);
+        turmas.setVisible(false);
+        alunos.setVisible(false);
+        labelDepartamento.setVisible(false);
+        labelCurso.setVisible(false);
+        labelTurma.setVisible(false);
+        labelAluno.setVisible(false);
         
-        
-        campis.getSelectionModel().selectedItemProperty().addListener(
-            (observable, oldValue, newValue) -> {
+        campis.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             try {
                 confirmaCampi(newValue.toString());
             } catch (SQLException ex) {
-                Logger.getLogger(DisciplinaAdicionarDisciplinaControlador.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(EmprestimoAdicionarEmprestimoControlador.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
         
-        departamentos.getSelectionModel().selectedItemProperty().addListener(
-            (observable, oldValue, newValue) -> {
+        departamentos.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             try {
                 confirmaDepartamento(newValue.toString());
             } catch (SQLException ex) {
-                Logger.getLogger(DisciplinaAdicionarDisciplinaControlador.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(EmprestimoAdicionarEmprestimoControlador.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
         
-        cursos.getSelectionModel().selectedItemProperty().addListener(
-            (observable, oldValue, newValue) -> {
+        cursos.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             try {
                 confirmaCurso(newValue.toString());
             } catch (SQLException ex) {
-                Logger.getLogger(DisciplinaAdicionarDisciplinaControlador.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(EmprestimoAdicionarEmprestimoControlador.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
         
-        idTurmaSelect.getSelectionModel().selectedItemProperty().addListener(
-            (observable, oldValue, newValue) -> {
+        turmas.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             try {
-                confirmaIdTurma(newValue.toString());
+                confirmaTurma(newValue.toString());
             } catch (SQLException ex) {
-                Logger.getLogger(DisciplinaAdicionarDisciplinaControlador.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(EmprestimoAdicionarEmprestimoControlador.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
         
-         nomeCampoTexto.getSelectionModel().selectedItemProperty().addListener(
-            (observable, oldValue, newValue) -> {
+        alunos.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             try {
                 mostrarCamposInserir(newValue.toString());
             } catch (SQLException ex) {
-                Logger.getLogger(DisciplinaAdicionarDisciplinaControlador.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(EmprestimoAdicionarEmprestimoControlador.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
     }
+    
     public void confirmaCampi(String valor) throws SQLException{
         campi = valor;
         
@@ -127,7 +128,7 @@ public class DisciplinaPesquisarControlador {
         }else{
             departamentos.setItems(bd.pegaDepartamentos(campi));
             departamentos.setVisible(true);
-            nomeDepartamento.setVisible(true);
+            labelDepartamento.setVisible(true);
         }
     }
     
@@ -144,7 +145,7 @@ public class DisciplinaPesquisarControlador {
         }else{
             cursos.setItems(bd.pegaCursos(departamento));
             cursos.setVisible(true);
-            nomeCurso.setVisible(true);
+            labelCurso.setVisible(true);
         }
     }
     
@@ -159,16 +160,16 @@ public class DisciplinaPesquisarControlador {
             
             alerta.showAndWait();
         }else{
-            idTurmaSelect.setItems(bd.pegaIdTurmas(curso));
-            idTurmaSelect.setVisible(true);
-            idTurma.setVisible(true);
+            turmas.setItems(bd.pegaTurmas(curso));
+            turmas.setVisible(true);
+            labelTurma.setVisible(true);
         }
     }
     
-    public void confirmaIdTurma(String valor) throws SQLException{
-        idTurmaString = valor;
+    public void confirmaTurma(String valor) throws SQLException{
+        turma = valor;
         
-        if(idTurma == null){
+        if(turma == null){
             Alert alerta = new Alert(Alert.AlertType.INFORMATION);
             alerta.setTitle("Campos vazios");
             alerta.setHeaderText(null);
@@ -176,67 +177,64 @@ public class DisciplinaPesquisarControlador {
             
             alerta.showAndWait();
         }else{
-            nomeCampoTexto.setItems(bd.pegaNomes(idTurmaString));
-            nomeCampoTexto.setVisible(true);
-            nome.setVisible(true);
+            alunos.setItems(bd.pegaAlunos(turma));
+            alunos.setVisible(true);
+            labelAluno.setVisible(true);
         }
     }
     
     public void mostrarCamposInserir(String valor) throws SQLException{
-        nomeString = valor;
+        aluno = valor;
         
-        if(nomeString == null){
+        if(aluno == null){
             Alert alerta = new Alert(Alert.AlertType.INFORMATION);
             alerta.setTitle("Campos vazios");
             alerta.setHeaderText(null);
             alerta.setContentText("Preencha todos os campos para continuar!");
             
             alerta.showAndWait();
-        }
-          
-           
-    }
-    
-    public void setMain(ManutencaoDisciplinas main) {
-        DisciplinaPesquisarControlador.main = main;
+        }           
+            
+        
     }
 
-    
     /**
-     * Retorna true se o usuário clicar OK,caso contrário false.
+     * Define o empréstimo a ser editado no dialog.
      *
-     * @return
+     * @param emprestimo
      */
-   
+    public void setEmprestimo(Emprestimo emprestimo) {
+        this.emprestimo = emprestimo;
+    }
 
     /**
      * Chamado quando o usuário clica OK.
      */
     @FXML
-    private void botaoOk() throws SQLException, IOException {
+    private void botaoOk() throws ParseException, SQLException {
         if (isInputValid()) {
+
+            emprestimo.setIdAluno(bd.pegaIdAluno(aluno));
+            emprestimo.setIdCampi(bd.pegaIdCampi(campi));
+            Date d = new Date();
+            emprestimo.setDataEmprestimo(new SimpleDateFormat("dd/MM/yyyy").format(d));
+            long timeNovaData = d.getTime() + (1000*60*60*24*7);
+            emprestimo.setDataPrevisaoDevolucao(new SimpleDateFormat("dd/MM/yyyy").format(new Date(timeNovaData))); 
             
+            main.mostrarEmprestimoSelecionarAcervo(emprestimo);
             
-            disciplina.setIdTurma(bd.pegaIdTurma(idTurmaString));
-            disciplina.setNome(nomeString);
-            disciplina.setCargaHorariaMin(bd.pegaCargaHorariaMinDisciplina(nomeString));
-            
-        
-                
-                
-                    main.mostrarDisciplinaAlterar(disciplina);
-              
-              
-          
         }
     }
-
+    
+    public void setMain(ManutencaoEmprestimos main) {
+        EmprestimoAdicionarEmprestimoControlador.main = main;
+    }
     /**
      * Chamado quando o usuário clica Cancelar.
      */
     @FXML
     private void botaoCancelar() throws IOException {
-        main.mostrarDisciplinaVisaoGeral();
+        main.mostrarEmprestimoVisaoGeral();
     }
 
     /**
@@ -246,6 +244,7 @@ public class DisciplinaPesquisarControlador {
      */
     private boolean isInputValid() {
         String errorMessage = "";
+
 
         if (campi == null ) {
             errorMessage += "Campi inválido!\n";
@@ -259,14 +258,15 @@ public class DisciplinaPesquisarControlador {
             errorMessage += "Curso inválido!\n";
         }
         
-        if (idTurmaString == null ) {
+        if (turma == null ) {
             errorMessage += "Turma inválida!\n";
         }
         
-        if (nomeString == null ) {
+        if (aluno == null ) {
             errorMessage += "Nome inválido!\n";
         }
- 
+
+
         if (errorMessage.length() == 0) {
             return true;
         } else {

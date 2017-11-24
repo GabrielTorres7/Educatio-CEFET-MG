@@ -17,24 +17,28 @@ public class Emprestimo {
     
     private final LongProperty multa;
     private final IntegerProperty idAcervo;
+    private final IntegerProperty idCampi;
     private final StringProperty idAluno;
     private final StringProperty dataEmprestimo;
     private final StringProperty dataPrevisaoDevolucao;
     private final StringProperty dataDevolucao;
+    private final StringProperty nome;
 
     /**
      *  Construtor padrão.
      */
     public Emprestimo() {
-        this(0, 0L, null, null, null, null);
+        this(null, 0, 0L, 0, null, null, null, null);
     }
 
     /**
      * Construtor com os dados inicializados.
      * 
      */
-    public Emprestimo(Integer idAcervo, Long multa, String idAluno, String dataEmprestimo, String dataDevolucao, String dataPrevisaoDevolucao) {
+    public Emprestimo(String nome, Integer idAcervo, Long multa, Integer idCampi, String idAluno, String dataEmprestimo, String dataDevolucao, String dataPrevisaoDevolucao) {
+        this.nome = new SimpleStringProperty(nome);
         this.idAcervo = new SimpleIntegerProperty(idAcervo);
+        this.idCampi = new SimpleIntegerProperty(idCampi);
         this.multa = new SimpleLongProperty(multa);
         this.idAluno = new SimpleStringProperty(idAluno);
         this.dataEmprestimo = new SimpleStringProperty(dataEmprestimo);
@@ -42,7 +46,18 @@ public class Emprestimo {
         this.dataPrevisaoDevolucao = new SimpleStringProperty(dataPrevisaoDevolucao);
     }
 
+    public String getNome() {
+        return nome.get();
+    }
 
+    public void setNome(String nome) {
+        this.nome.set(nome);
+    }
+
+    public StringProperty nomeProperty() {
+        return nome;
+    }
+    
     public int getIdAcervo() {
         return idAcervo.get();
     }
@@ -54,7 +69,19 @@ public class Emprestimo {
     public IntegerProperty idAcervoProperty() {
         return idAcervo;
     }
+    
+     public int getIdCampi() {
+        return idCampi.get();
+    }
 
+    public void setIdCampi(int idCampi) {
+        this.idCampi.set(idCampi);
+    }
+
+    public IntegerProperty idCampiProperty() {
+        return idCampi;
+    }
+    
     public Long getMulta() {
         return multa.get();
     }

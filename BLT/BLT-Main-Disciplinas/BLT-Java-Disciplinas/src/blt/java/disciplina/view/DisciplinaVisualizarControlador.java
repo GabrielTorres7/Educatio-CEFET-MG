@@ -3,11 +3,15 @@ package blt.java.disciplina.view;
 import blt.java.disciplina.ManutencaoDisciplinas;
 import blt.java.disciplina.jdbc.DisciplinaDao;
 import blt.java.disciplina.model.Disciplina;
+import java.io.IOException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
@@ -25,16 +29,18 @@ public class DisciplinaVisualizarControlador {
     private TableColumn<Disciplina, Integer> idTurmaColuna;
     @FXML
     private TableColumn<Disciplina, Integer> cargaHorariaMinColuna;
+    @FXML
+    private TextField filtro;
 
     ManutencaoDisciplinas mainApp;
-    private Stage dialogStage;
+    private static ManutencaoDisciplinas main;
     DisciplinaDao bd = new DisciplinaDao();
    
     public DisciplinaVisualizarControlador() {
     }
 
-    public void setDialogStage(Stage dialogStage) {
-        this.dialogStage = dialogStage;
+    public void setMain(ManutencaoDisciplinas main) {
+        DisciplinaVisualizarControlador.main = main;
     }
 
 
@@ -51,11 +57,33 @@ public class DisciplinaVisualizarControlador {
 
         ObservableList<Disciplina> disciplinas = FXCollections.observableArrayList(bd.getLista());
         disciplinaTabela.setItems(disciplinas);
+        
+        FilteredList<Disciplina> filtraDados = new FilteredList<>(disciplinas, p -> true);
+        filtro.textProperty().addListener((observable, oldValue, newValue) -> 
+        {
+            filtraDados.setPredicate(Disciplina -> {
+            // Se o filtro estiver vazio mostra todos.
+            if (newValue == null || newValue.isEmpty()) {
+                return true;
+            }
+            // passa o filtro pra letra minuscula
+            String lowerCaseFilter = newValue.toLowerCase();
+            //Compara o filtro com os nomes que estão na lista
+            String id = Disciplina.getNome();
+            if (id.toLowerCase().contains(lowerCaseFilter)) {
+                return true; // Contem o filtro.
+            }
+                return false; //Não contem.
+            });
+        });
+        SortedList<Disciplina> sorteiaDados = new SortedList<>(filtraDados);
+        sorteiaDados.comparatorProperty().bind(disciplinaTabela.comparatorProperty());
+        disciplinaTabela.setItems(sorteiaDados);
     }
 
     @FXML
-    private void botaoOk() {
-        dialogStage.close();
+    private void botaoOk() throws IOException {
+        main.mostrarDisciplinaVisaoGeral();
     }
 
 }

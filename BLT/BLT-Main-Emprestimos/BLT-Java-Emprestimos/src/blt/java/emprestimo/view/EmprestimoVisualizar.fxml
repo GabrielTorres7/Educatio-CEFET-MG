@@ -7,23 +7,21 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" styleClass="background" stylesheets="@EmprestimoVisualizar.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="blt.java.emprestimo.view.EmprestimoVisualizarControlador">
    <children>
-      <TableView fx:id="emprestimoTabela" layoutX="-4.0" prefHeight="400.0" prefWidth="600.0" styleClass="track-background" stylesheets="@Padrao.css" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <TableView fx:id="emprestimoTabela" editable="true" layoutX="-4.0" layoutY="113.0" prefHeight="237.0" prefWidth="600.0" styleClass="track-background" stylesheets="@Padrao.css" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="113.0">
         <columns>
-          <TableColumn fx:id="idAlunoColuna" prefWidth="81.0" text="Id Aluno" />
-          <TableColumn fx:id="idAcervoColuna" text="Id Acervo" />
-            <TableColumn fx:id="dataEmprestimoColuna" prefWidth="119.0" text="Data Empréstimo" />
-            <TableColumn fx:id="dataPrevisaoDevolucaoColuna" prefWidth="75.0" text="Data Previsao Devolucao" />
-            <TableColumn fx:id="dataDevolucaoColuna" prefWidth="75.0" text="Data Devolução" />
-            <TableColumn fx:id="multaColuna" prefWidth="75.0" text="Multa" />
+          <TableColumn fx:id="idAlunoColuna" prefWidth="126.0" text="Id Aluno" />
+          <TableColumn fx:id="idAcervoColuna" prefWidth="118.0" text="Id Acervo" />
+            <TableColumn fx:id="dataEmprestimoColuna" prefWidth="151.0" text="Data Empréstimo" />
+            <TableColumn fx:id="dataPrevisaoDevolucaoColuna" prefWidth="200.0" text="Data Previsao Devolucao" />
         </columns>
-         <columnResizePolicy>
-            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-         </columnResizePolicy>
       </TableView>
       <HBox layoutX="508.0" layoutY="260.0" prefHeight="37.0" prefWidth="72.0" AnchorPane.bottomAnchor="3.0" AnchorPane.rightAnchor="20.0">
          <children>
             <Button alignment="CENTER" mnemonicParsing="false" onAction="#botaoOk" prefHeight="25.0" prefWidth="70.0" text="Ok" />
          </children>
       </HBox>
+      <Label layoutX="136.0" layoutY="14.0" styleClass="label-cabecalho" stylesheets="@Padrao.css" text="Empréstimos Ativos" />
+      <Label layoutX="31.0" layoutY="79.0" styleClass="label-pequena" text="Id de algum acervo emprestado:" />
+      <TextField fx:id="filtro" layoutX="300.0" layoutY="78.0" prefHeight="27.0" prefWidth="235.0" stylesheets="@Padrao.css" />
    </children>
 </AnchorPane>

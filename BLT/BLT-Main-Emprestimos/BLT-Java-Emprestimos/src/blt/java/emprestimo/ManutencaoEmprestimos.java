@@ -3,23 +3,25 @@ package blt.java.emprestimo;
 import java.io.IOException;
 
 import blt.java.emprestimo.model.Emprestimo;
-import blt.java.emprestimo.view.EmprestimoCaixaEditarControlador;
-import blt.java.emprestimo.view.EmprestimoPesquisarControlador;
+import blt.java.emprestimo.view.EmprestimoAdicionarEmprestimoControlador;
+import blt.java.emprestimo.view.EmprestimoExcluirEmprestimoControlador;
+import blt.java.emprestimo.view.EmprestimoSelecionarAcervoControlador;
 import blt.java.emprestimo.view.EmprestimoVisaoGeralControlador;
 import blt.java.emprestimo.view.EmprestimoVisualizarControlador;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class ManutencaoEmprestimos extends Application {
 
-    private Stage primaryStage;
-    private BorderPane rootLayout;
+    private Stage stage;
+    private BorderPane borda;
 
 
     public ManutencaoEmprestimos() {
@@ -27,29 +29,31 @@ public class ManutencaoEmprestimos extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) {
-        this.primaryStage = primaryStage;
-        this.primaryStage.setTitle("BLT-Java-Disciplinas");
-
-        initRootLayout();
-        mostrarEmprestimoVisaoGeral();
+    public void start(Stage stage) {
+        this.stage = stage;
+        try {
+            initRootLayout();
+            mostrarEmprestimoVisaoGeral();
+        } catch (IOException ex) {
+            Logger.getLogger(ManutencaoEmprestimos.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
 
 	/**
      * Inicializa o root layout (layout base).
      */
-    public void initRootLayout() {
+    public void initRootLayout() throws IOException {
         try {
             // Carrega o root layout do arquivo fxml.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(ManutencaoEmprestimos.class.getResource("view/RootLayout.fxml"));
-            rootLayout = (BorderPane) loader.load();
+            borda = (BorderPane) loader.load();
 
             // Mostra a scene (cena) contendo o root layout.
-            Scene scene = new Scene(rootLayout);
-            primaryStage.setScene(scene);
-            primaryStage.show();
+            Scene scene = new Scene(borda);
+            stage.setScene(scene);
+            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -58,7 +62,7 @@ public class ManutencaoEmprestimos extends Application {
     /**
      * Mostra o emprestimo visao geral dentro do root layout.
      */
-    public void mostrarEmprestimoVisaoGeral() {
+    public void mostrarEmprestimoVisaoGeral() throws IOException{
         try {
             // Carrega o empréstimo visão geral.
             FXMLLoader loader = new FXMLLoader();
@@ -66,7 +70,7 @@ public class ManutencaoEmprestimos extends Application {
             AnchorPane emprestimoVisaoGeral = (AnchorPane) loader.load();
 
             // Define a emprestimo visão geral no centro do root layout.
-            rootLayout.setCenter(emprestimoVisaoGeral);
+            borda.setCenter(emprestimoVisaoGeral);
 
             // Dá ao controlador acesso à aplicação principal.
             EmprestimoVisaoGeralControlador controller = loader.getController();
@@ -77,73 +81,70 @@ public class ManutencaoEmprestimos extends Application {
         }
     }
     
-    public boolean mostrarEmprestimoPesquisar(Emprestimo emprestimo) {
+    public void mostrarEmprestimoExcluir() {
         try {
             // Carrega o arquivo fxml e cria um novo stage para a janela popup.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(ManutencaoEmprestimos.class.getResource("view/EmprestimoPesquisar.fxml"));
+            loader.setLocation(ManutencaoEmprestimos.class.getResource("view/EmprestimoExcluirEmprestimo.fxml"));
             AnchorPane page = (AnchorPane) loader.load();
 
-            // Cria o palco dialogStage.
-            Stage dialogStage = new Stage();
-            dialogStage.setTitle("Finalizar Empréstimo");
-            dialogStage.initModality(Modality.WINDOW_MODAL);
-            dialogStage.initOwner(primaryStage);
-            Scene scene = new Scene(page);
-            dialogStage.setScene(scene);
+            borda.setCenter(page);
 
             // Define a classe no controle.
-            EmprestimoPesquisarControlador controller = loader.getController();
-            controller.setDialogStage(dialogStage);
-            controller.setDisciplina(emprestimo);
-
-            // Mostra a janela e espera até o usuário fechar.
-            dialogStage.showAndWait();
+            EmprestimoExcluirEmprestimoControlador controller = loader.getController();
+            controller.setMain(this);
             
-            return controller.isOkClicked();
+
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
+            
         }
     }
 
-    /**
-     * Abre uma janela para editar detalhes para o empréstimo especificado. Se o usuário clicar
-     * OK, as mudanças são salvas no objeto empréstimo fornecido e retorna true.
-     *
-     * @param emprestimo O objeto emprestimo a ser editado
-     * @return true Se o usuário clicou OK, caso contrário false.
-     */
-    public boolean mostrarEmprestimoCaixaEditar(Emprestimo emprestimo) {
+    public void mostrarEmprestimoAdicionar() {
         try {
             // Carrega o arquivo fxml e cria um novo stage para a janela popup.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(ManutencaoEmprestimos.class.getResource("view/EmprestimoCaixaEditar.fxml"));
+            loader.setLocation(ManutencaoEmprestimos.class.getResource("view/EmprestimoAdicionarEmprestimo.fxml"));
             AnchorPane page = (AnchorPane) loader.load();
 
             // Cria o palco dialogStage.
-            Stage dialogStage = new Stage();
-            dialogStage.setTitle("Criar Emprestimo");
-            dialogStage.initModality(Modality.WINDOW_MODAL);
-            dialogStage.initOwner(primaryStage);
-            Scene scene = new Scene(page);
-            dialogStage.setScene(scene);
+            borda.setCenter(page);
 
             // Define a classe no controlador.
-            EmprestimoCaixaEditarControlador controller = loader.getController();
-            controller.setDialogStage(dialogStage);
-            controller.setEmprestimo(emprestimo);
+            EmprestimoAdicionarEmprestimoControlador controller = loader.getController();
+            controller.setMain(this);
+            
 
-            // Mostra a janela e espera até o usuário fechar.
-            dialogStage.showAndWait();
-
-            return controller.isOkClicked();
+            
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
         }
     }
+    
+    public void mostrarEmprestimoSelecionarAcervo(Emprestimo emprestimo) {
+        try {
+            // Carrega o arquivo fxml e cria um novo stage para a janela popup.
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(ManutencaoEmprestimos.class.getResource("view/EmprestimoSelecionarAcervo.fxml"));
+            AnchorPane page = (AnchorPane) loader.load();
 
+            // Cria o palco dialogStage.
+            borda.setCenter(page);
+            
+            // Define a classe no controlador.
+            EmprestimoSelecionarAcervoControlador controller = loader.getController();
+            controller.setMain(this);
+            controller.setEmprestimo(emprestimo);
+            controller.setTabela();
+            
+
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
     //Mostra a tabela de resultados
     public void mostrarEmprestimoVisualizar() {
         try {
@@ -152,33 +153,15 @@ public class ManutencaoEmprestimos extends Application {
             loader.setLocation(ManutencaoEmprestimos.class.getResource("view/EmprestimoVisualizar.fxml"));
             AnchorPane page = (AnchorPane) loader.load();
 
-            // Cria o palco dialogStage.
-            Stage dialogStage = new Stage();
-            dialogStage.setTitle("Visualizar Emprestimos");
-            dialogStage.initModality(Modality.WINDOW_MODAL);
-            dialogStage.initOwner(primaryStage);
-            Scene scene = new Scene(page);
-            dialogStage.setScene(scene);
-
+            borda.setCenter(page);
+            
             // Dá ao controlador acesso à aplicação principal.
             EmprestimoVisualizarControlador controller = loader.getController();
-            controller.setDialogStage(dialogStage);
-
-
-            // Mostra a janela e espera até o usuário fechar.
-            dialogStage.showAndWait();
+            controller.setMain(this);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-     /**
-     * Retorna o palco principal.
-     * @return
-     */
-    public Stage getPrimaryStage() {
-        return primaryStage;
     }
 
     public static void main(String[] args) {

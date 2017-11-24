@@ -12,7 +12,7 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" styleClass="background" stylesheets="@DisciplinaVisualizar.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="blt.java.disciplina.view.DisciplinaVisualizarControlador">
    <children>
-      <TableView fx:id="disciplinaTabela" layoutX="-4.0" prefHeight="200.0" prefWidth="408.0" styleClass="textfield" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <TableView fx:id="disciplinaTabela" layoutX="-4.0" layoutY="116.0" prefHeight="234.0" prefWidth="600.0" styleClass="textfield" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="116.0">
         <columns>
           <TableColumn fx:id="nomeColuna" prefWidth="75.0" text="Nome" />
           <TableColumn fx:id="idTurmaColuna" prefWidth="75.0" text="IdTurma" />
@@ -31,5 +31,8 @@
             <Button alignment="CENTER" mnemonicParsing="false" onAction="#botaoOk" prefHeight="25.0" prefWidth="70.0" text="Ok" />
          </children>
       </HBox>
+      <Label layoutX="153.0" layoutY="14.0" styleClass="label-cabecalho" text="Disciplinas Ativas" />
+      <Label layoutX="29.0" layoutY="83.0" styleClass="label-pequena" text="Nome da disciplina ativa:" />
+      <TextField fx:id="filtro" layoutX="249.0" layoutY="81.0" prefHeight="27.0" prefWidth="275.0" stylesheets="@Padrao.css" />
    </children>
 </AnchorPane>

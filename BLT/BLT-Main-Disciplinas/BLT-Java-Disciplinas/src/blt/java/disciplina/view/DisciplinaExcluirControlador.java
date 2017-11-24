@@ -23,7 +23,7 @@ import javafx.scene.control.Label;
  *
  * @author Torres
  */
-public class DisciplinaPesquisarControlador {
+public class DisciplinaExcluirControlador {
     
     @FXML
     private ChoiceBox campis;
@@ -198,7 +198,7 @@ public class DisciplinaPesquisarControlador {
     }
     
     public void setMain(ManutencaoDisciplinas main) {
-        DisciplinaPesquisarControlador.main = main;
+        DisciplinaExcluirControlador.main = main;
     }
 
     
@@ -221,13 +221,34 @@ public class DisciplinaPesquisarControlador {
             disciplina.setNome(nomeString);
             disciplina.setCargaHorariaMin(bd.pegaCargaHorariaMinDisciplina(nomeString));
             
-        
+            boolean existeDisciplina = false;
+            List<Disciplina> disciplinas = bd.getLista();
+
+		for (Disciplina disciplina : disciplinas) {
+			if(this.disciplina.getNome().equals( disciplina.getNome() )){
+				this.disciplina = disciplina;
+                                existeDisciplina = true;
+			}
+		}
                 
+                if(existeDisciplina){
+			bd.remove(disciplina);
+                        Alert alert = new Alert(AlertType.INFORMATION);
+                                alert.setTitle("Disciplina removida!");
+                                alert.setHeaderText("Disciplina encontrada!");
+                                alert.setContentText("A disciplina foi removida com sucesso!");
+                                alert.showAndWait();
+                }else{
+                    Alert alert = new Alert(AlertType.ERROR);
+                      alert.setTitle("Nome Inválido");
+                      alert.setHeaderText("Disciplina não encontrada!");
+                      alert.setContentText("Por favor, visualize os nomes das disciplinas e tente novamente.");
+                      alert.showAndWait();
+                }   
                 
-                    main.mostrarDisciplinaAlterar(disciplina);
               
               
-          
+            main.mostrarDisciplinaVisaoGeral();
         }
     }
 
